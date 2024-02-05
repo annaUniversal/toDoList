@@ -97,7 +97,8 @@
     // Toggle sort direction
     sortDirection[column] = sortDirection[column] === "asc" ? "desc" : "asc";
 
-    console.log(sortDirection);
+    // Clear existing icons from other column headers
+    clearSortIcons(column);
 
     // Update sorting icon for the clicked button
     updateSortIcon(button, sortDirection[column]);
@@ -112,10 +113,16 @@
       const valueA = getValue(a, column);
       const valueB = getValue(b, column);
 
-      if (sortDirection[column] === "asc") {
-        return valueA - valueB;
+      if (typeof valueA === "string" && typeof valueB === "string") {
+        // Use localeCompare for string comparison
+        return sortDirection[column] === "asc"
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
       } else {
-        return valueB - valueA;
+        // For non-string columns (e.g., dates), use numeric comparison
+        return sortDirection[column] === "asc"
+          ? valueA - valueB
+          : valueB - valueA;
       }
     });
 
@@ -139,6 +146,19 @@
     }
   }
 
+  function clearSortIcons(currentColumn) {
+    const columnHeaders = document.querySelectorAll("#tasks-table-header th");
+    columnHeaders.forEach((header) => {
+      const column = header.getAttribute("data-column");
+
+      if (column !== currentColumn) {
+        // Clear icons from other column headers
+        const existingIcons = header.querySelectorAll("span");
+        existingIcons.forEach((icon) => icon.remove());
+      }
+    });
+  }
+
   function updateSortIcon(element, direction) {
     const icons = {
       asc: "&#9650;",
@@ -159,20 +179,23 @@
   }
 
   function getValue(row, column) {
+    const cellValue = row
+      .querySelector(`td:nth-child(${getColumnIndex(column)})`)
+      .textContent.trim();
+
     if (
       column === "createdAt" ||
       column === "updatedAt" ||
       column === "dueDate"
     ) {
       // If the column is a date, convert it to a Date object
-      return new Date(
-        row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent
-      );
+      return new Date(cellValue);
+    } else if (!isNaN(parseFloat(cellValue))) {
+      // For numeric values, convert to a number
+      return parseFloat(cellValue);
     } else {
-      // For other columns, assume it's a numeric value
-      return parseFloat(
-        row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent
-      );
+      // For other columns, treat as strings
+      return cellValue.toLowerCase(); // Use toLowerCase for case-insensitive sorting
     }
   }
 
