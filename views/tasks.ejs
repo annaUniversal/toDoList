@@ -1,5 +1,4 @@
-<%- include("partials/head.ejs") %> 
-<%- include("partials/header.ejs") %>
+<%- include("partials/head.ejs") %> <%- include("partials/header.ejs") %>
 
 <h2>Tasks List</h2>
 
@@ -7,41 +6,60 @@
   <tr>
     <td>
       <button type="button" onclick="filterTasks('work')">Work Only</button>
-      <button type="button" onclick="filterTasks('personal')">Personal Only</button>
+      <button type="button" onclick="filterTasks('personal')">
+        Personal Only
+      </button>
       <button type="button" onclick="filterTasks('all')">Show All</button>
-      <button type="button" onclick="sortDate('createAt','asc')">CreatedAtAsc</button>
-      <button type="button" onclick="sortDate('createdAt', 'desc')">CreatedAtdes</button>
+      <!-- <button type="button" onclick="sortDate('createAt','asc')">
+        CreatedAtAsc&#9650; &#9660;
+      </button>
+      <button type="button" onclick="sortDate('createdAt', 'desc')">
+        CreatedAtdes
+      </button>
 
-       <button type="button" onclick="sortDate('des')">Updated</button>
+      <button type="button" onclick="sortDate('des')">Updated</button> -->
     </td>
   </tr>
 </table>
 
 <table id="tasks-table">
   <tr id="tasks-table-header">
-    <th>Category</th>
-    <th>Task description</th>
-    <th>Status</th>
-    <th>Created</th>
-    <th>Updated</th>
-    <th>Due date</th>
-    <th colspan="2"></th>
+    <th onclick="sortDate('category', this)">Category</th>
+    <th onclick="sortDate('taskName', this)">Task description</th>
+    <th onclick="sortDate('status', this)">Status</th>
+    <th onclick="sortDate('createdAt', this)">Created</th>
+    <th onclick="sortDate('updatedAt', this)">Updated</th>
+    <th onclick="sortDate('dueDate', this)">Due date</th>
+    <th colspan="2" id="sort-icons-row"></th>
   </tr>
   <% if (tasks && tasks.length) { tasks.forEach((task) => { %>
   <tr class="task-row" data-category="<%= task.category %>">
     <td><%= task.category %></td>
     <td><%= task.taskName %></td>
     <td><%= task.status %></td>
-    <td><%= task.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', }) %></td>
-    <td><%= task.updatedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', }) %></td>
-    <td><%= task.dueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', }) %></td>
+    <td>
+      <%= task.createdAt.toLocaleDateString('en-US', { year: 'numeric', month:
+      'short', day: 'numeric', }) %>
+    </td>
+    <td>
+      <%= task.updatedAt.toLocaleDateString('en-US', { year: 'numeric', month:
+      'short', day: 'numeric', }) %>
+    </td>
+    <td>
+      <%= task.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
+      'short', day: 'numeric', }) %>
+    </td>
     <td>
       <a href="/tasks/edit/<%= task.id %>">
         <button type="button">Edit</button>
       </a>
     </td>
     <td>
-      <form method="POST" action="/tasks/delete/<%= task.id %>" style="display: inline">
+      <form
+        method="POST"
+        action="/tasks/delete/<%= task.id %>"
+        style="display: inline"
+      >
         <button>Delete</button>
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>
@@ -55,79 +73,127 @@
 </a>
 
 <script>
-function filterTasks(category) {
-  const rows = document.querySelectorAll('.task-row');
-  rows.forEach(row => {
-    const rowCategory = row.getAttribute('data-category');
-    if (category === 'all' || rowCategory === category) {
-      row.style.display = '';
+  function filterTasks(category) {
+    const rows = document.querySelectorAll(".task-row");
+    rows.forEach((row) => {
+      const rowCategory = row.getAttribute("data-category");
+      if (category === "all" || rowCategory === category) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  let sortDirection = {
+    createdAt: "asc",
+    updatedAt: "asc",
+    dueDate: "asc",
+  };
+
+  function sortDate(column, button) {
+    const rows = Array.from(document.querySelectorAll(".task-row"));
+
+    // Toggle sort direction
+    sortDirection[column] = sortDirection[column] === "asc" ? "desc" : "asc";
+
+    console.log(sortDirection);
+
+    // Update sorting icon for the clicked button
+    updateSortIcon(button, sortDirection[column]);
+
+    // Update sorting icon for the corresponding date column header
+    const dateColumnHeader = document.querySelector(
+      `th[data-column="${column}"]`
+    );
+    updateSortIcon(dateColumnHeader, sortDirection[column]);
+
+    rows.sort((a, b) => {
+      const valueA = getValue(a, column);
+      const valueB = getValue(b, column);
+
+      if (sortDirection[column] === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    });
+
+    const tasksTable = document.getElementById("tasks-table");
+
+    // Create a document fragment to hold sorted rows
+    const fragment = document.createDocumentFragment();
+
+    // Append the header row to the fragment
+    fragment.appendChild(tasksTable.querySelector("#tasks-table-header"));
+
+    // Append sorted rows to the fragment
+    rows.forEach((row) => fragment.appendChild(row));
+
+    // Clear existing rows only if sorting is successful
+    if (fragment.childNodes.length === rows.length + 1) {
+      tasksTable.innerHTML = "";
+
+      // Append sorted rows, including the header, to the tasksTable
+      tasksTable.appendChild(fragment);
+    }
+  }
+
+  function updateSortIcon(element, direction) {
+    const icons = {
+      asc: "&#9650;",
+      desc: "&#9660;",
+    };
+
+    // Check if the element exists
+    if (element) {
+      // Remove existing icons
+      const existingIcons = element.querySelectorAll("span");
+      existingIcons.forEach((icon) => icon.remove());
+
+      // Update the icon for the clicked element
+      const iconElement = document.createElement("span");
+      iconElement.innerHTML = `${icons[direction]}`;
+      element.appendChild(iconElement);
+    }
+  }
+
+  function getValue(row, column) {
+    if (
+      column === "createdAt" ||
+      column === "updatedAt" ||
+      column === "dueDate"
+    ) {
+      // If the column is a date, convert it to a Date object
+      return new Date(
+        row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent
+      );
     } else {
-      row.style.display = 'none';
+      // For other columns, assume it's a numeric value
+      return parseFloat(
+        row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent
+      );
     }
-  });
-}
+  }
 
-function sortDate(column, order) {
-  const rows = Array.from(document.querySelectorAll('.task-row'));
-
-  rows.sort((a, b) => {
-    const valueA = getValue(a, column);
-    const valueB = getValue(b, column);
-
-    if (order === 'asc') {
-      return valueA - valueB;
-    } else if (order === 'desc') {
-      return valueB - valueA;
+  function getColumnIndex(column) {
+    // Replace with the correct column indices for your table
+    // Adjust the indices based on the actual structure of your table
+    switch (column) {
+      case "category":
+        return 1;
+      case "taskName":
+        return 2;
+      case "status":
+        return 3;
+      case "createdAt":
+        return 4;
+      case "updatedAt":
+        return 5;
+      case "dueDate":
+        return 6;
+      default:
+        return 1;
     }
-    return 0;
-  });
-
-  const tasksTable = document.getElementById('tasks-table');
-
-  // Create a document fragment to hold sorted rows
-  const fragment = document.createDocumentFragment();
-
-  // Append sorted rows to the fragment
-  rows.forEach(row => fragment.appendChild(row));
-
-  // Clear existing rows only if sorting is successful
-  if (fragment.childNodes.length === rows.length) {
-    tasksTable.innerHTML = '';
-
-    // Append sorted rows to the tasksTable
-    tasksTable.appendChild(fragment);
   }
-}
-
-function getValue(row, column) {
-  if (column === 'createdAt' || column === 'updatedAt' || column === 'dueDate') {
-    // If the column is a date, convert it to a Date object
-    return new Date(row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent);
-  } else {
-    // For other columns, assume it's a numeric value
-    return parseFloat(row.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent);
-  }
-}
-
-function getColumnIndex(column) {
-  // Replace with the correct column indices for your table
-  // Adjust the indices based on the actual structure of your table
-  switch (column) {
-    case 'category':
-      return 1;
-    case 'taskName':
-      return 2;
-    case 'status':
-      return 3;
-    case 'createdAt':
-      return 4;
-    case 'updatedAt':
-      return 5;
-    case 'dueDate':
-      return 6;
-    default:
-      return 1;
-  }
-}
-
 </script>
