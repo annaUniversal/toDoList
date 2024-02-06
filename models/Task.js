@@ -26,10 +26,11 @@ const TaskSchema = new mongoose.Schema({
     default: Date.now,
     
   },
-  // updatedAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // }
+  notes: {
+    type: String,
+    maxlength: 550,
+    default: "The comment should not exceed 550 symbols "
+  }
 },{timestamps:true});
 
 
