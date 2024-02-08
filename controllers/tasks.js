@@ -32,9 +32,9 @@ const showEditForm = async (req, res) => {
 
 const createTask = async (req, res) => {
   req.body.createdBy = req.user._id.toString();
-  const { category, taskName, status } = req.body;
+  const { category, taskName, status,  dueDate } = req.body;
 
-  if (category === "" || taskName === "" || status === "") {
+  if (category === "" || taskName === "" || status === "" || dueDate ==="") {
     req.flash("error", "All equired fields cannot be empty.");
     res.redirect("/category/new");
   }

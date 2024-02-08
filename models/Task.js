@@ -23,13 +23,12 @@ const TaskSchema = new mongoose.Schema({
   },
   dueDate: {
     type: Date,
-    default: Date.now,
-    
+    // default: Date.now,
+    required: [true, "Please, provide the Due date"],
   },
   notes: {
     type: String,
     maxlength: 550,
-    default: "The comment should not exceed 550 symbols "
   }
 },{timestamps:true});
 

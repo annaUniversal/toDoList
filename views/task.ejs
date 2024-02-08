@@ -6,8 +6,8 @@
   <div>
     <label for="category">category:</label>
     <select id="category" name="category">
-      <option value="work" <%= task && task.work === "work" ? "selected" : '' %> >Work</option>
-      <option value="personal" <%= task && task.status === "personal" ? "selected" : '' %> >Personal</option>
+      <option value="work" <%= task && task.category === "work" ? "selected" : '' %> >Work</option>
+      <option value="personal" <%= task && task.category === "personal" ? "selected" : '' %> >Personal</option>
     </select>
   </div>
   <div>
@@ -17,11 +17,21 @@
   <div>
     <label for="status">Status</label>
     <select id="status" name="status">
-      <option value="pending" <%= task && task.status === "pending" ? "selected" : '' %> >Pending</option>
-      <option value="inProgress" <%= task && task.status === "inProgress" ? "selected" : '' %> >In Progress</option>
-      <option value="declined" <%= task && task.status === "declined" ? "selected" : '' %> >declined</option>
-      <option value="done" <%= task && task.status === "done" ? "selected" : '' %> >done</option>         
+      <option value="pending" <%= (task && task.status === 'pending' ? 'selected' : '') %> >Pending</option>
+      <option value="inProgress" <%= task && task.status === 'inProgress' ? 'selected' : '' %> >In Progress</option>
+      <option value="declined" <%= task && task.status === 'declined' ? 'selected' : '' %> >declined</option>
+      <option value="done" <%= task && task.status === 'done' ? 'selected' : '' %> >done</option>         
     </select>
+  </div>
+  <div>
+    <label for="notes">notes:</label>
+    <input type="text" id="notes" name="notes" value= "<%=  task ? task.notes : '' %>" >
+  </div>
+  <div> 
+    <label for="dueDate">Due Date:</label>
+    <input type="date" id="dueDate" name="dueDate" value="<%= task ? task.dueDate.toISOString().substr(0, 10) : '' %>" required>
+
+
   </div>
   <% if (task) { %>
     <div>
@@ -30,12 +40,7 @@
     <div>
       <p>Updated: <%= task.updatedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); %></p>
     </div>
-    <div>
-      <label for="dueDate">Due Date:</label>
-      <input type="date" id="dueDate" name="dueDate" value="<%= task.dueDate.toISOString().split('T')[0] %>" required>
-
-    </div>
-  <% } %>
+    <% } %>
   <button type="submit" id="adding-task"><%= task ? "Update Task" : "Add Task" %></button>
   <input type="hidden" name="_csrf" value="<%= _csrf %>" /> 
 </form>

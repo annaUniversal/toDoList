@@ -10,14 +10,6 @@
         Personal Only
       </button>
       <button type="button" onclick="filterTasks('all')">Show All</button>
-      <!-- <button type="button" onclick="sortDate('createAt','asc')">
-        CreatedAtAsc&#9650; &#9660;
-      </button>
-      <button type="button" onclick="sortDate('createdAt', 'desc')">
-        CreatedAtdes
-      </button>
-
-      <button type="button" onclick="sortDate('des')">Updated</button> -->
     </td>
   </tr>
 </table>
@@ -30,6 +22,7 @@
     <th onclick="sortDate('createdAt', this)">Created</th>
     <th onclick="sortDate('updatedAt', this)">Updated</th>
     <th onclick="sortDate('dueDate', this)">Due date</th>
+    <th>Notes</th>
     <th colspan="2" id="sort-icons-row"></th>
   </tr>
   <% if (tasks && tasks.length) { tasks.forEach((task) => { %>
@@ -49,6 +42,7 @@
       <%= task.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
       'short', day: 'numeric', }) %>
     </td>
+    <td><%= task.notes %></td>
     <td>
       <a href="/tasks/edit/<%= task.id %>">
         <button type="button">Edit</button>
