@@ -29,7 +29,6 @@ const TaskSchema = new mongoose.Schema({
   notes: {
     type: String,
     maxlength: 550,
-
   }
 },{timestamps:true});
 
