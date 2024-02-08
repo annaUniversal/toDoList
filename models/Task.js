@@ -23,13 +23,14 @@ const TaskSchema = new mongoose.Schema({
   },
   dueDate: {
     type: Date,
-    default: Date.now,
-    
+    // default: Date.now,
+    required: [true, "Please, provide the Due date"],
   },
-  // updatedAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // }
+  notes: {
+    type: String,
+    maxlength: 550,
+
+  }
 },{timestamps:true});
 
 
