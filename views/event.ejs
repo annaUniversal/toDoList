@@ -1,0 +1,31 @@
+<%- include("partials/head.ejs") %> 
+<%- include("partials/header.ejs") %>
+
+<h2><%= event ? "Edit" : "Add New" %> Event</h2>
+<form method="POST" action="<%= event ? '/events/update/' + event._id : '/events' %>">
+  <div>
+    <label for="eventName">eventName:</label>
+    <input type="text" id="eventName" name="eventName" value="<%= event ? event.eventName : '' %>" required />
+  </div>
+  <div>
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="pending" <%= (event && event.status === 'pending' ? 'selected' : '') %> >Pending</option>
+      <option value="going" <%= event && event.status === 'going' ? 'selected' : '' %> >Going</option>
+      <option value="maybe" <%= event && event.status === 'maybe' ? 'selected' : '' %> >Maybe</option>
+      <option value="declined" <%= event && event.status === 'declined' ? 'selected' : '' %> >Declined</option>       
+    </select>
+  </div>
+  <div>
+    <label for="description">description:</label>
+    <input type="text" id="description" name="description" value= "<%=  event ? event.description : '' %>" >
+  </div>
+  <div> 
+    <label for="dueDate">Date of the event:</label>
+    <input type="date" id="dueDate" name="dueDate" value="<%= event ? event.dueDate.toISOString().substr(0, 10) : '' %>" required>
+  </div>
+  
+  <button type="submit" id="adding-event"><%= event ? "Update Event" : "Add Event" %></button>
+  <input type="hidden" name="_csrf" value="<%= _csrf %>" /> 
+</form>
+<%- include("partials/footer.ejs") %>

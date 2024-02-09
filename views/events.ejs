@@ -1,60 +1,47 @@
 <%- include("partials/head.ejs") %> <%- include("partials/header.ejs") %>
 
-<h2>Tasks List</h2>
+<h2>Events List</h2>
 
 <table>
   <tr>
     <td>
-      <button type="button" onclick="filterTasks('work')">Work Only</button>
-      <button type="button" onclick="filterTasks('personal')">
-        Personal Only
-      </button>
-      <button type="button" onclick="filterTasks('all')">Show All</button>
-      <a href="/events">
-        <button type="button">Show my Events</button>
+      <a href="/tasks">
+        <button type="button">Show my Tasks</button>
+      </a>
+      <!-- <button type="button" onclick="filterEvents('all')">Show All</button> -->
+      <a href="/events/new">
+        <button type="button">Add New Event</button>
       </a>
     </td>
   </tr>
 </table>
 
-<table id="tasks-table">
-  <tr id="tasks-table-header">
-    <th onclick="sortDate('category', this)">Category</th>
-    <th onclick="sortDate('taskName', this)">Task description</th>
+<table id="events-table">
+  <tr id="events-table-header">
+    <th onclick="sortDate('eventName', this)">Event</th>
     <th onclick="sortDate('status', this)">Status</th>
-    <th onclick="sortDate('createdAt', this)">Created</th>
-    <th onclick="sortDate('updatedAt', this)">Updated</th>
-    <th onclick="sortDate('dueDate', this)">Due date</th>
-    <th>Notes</th>
+    <th onclick="sortDate('dueDate', this)">Event date</th>
+    <th>Event description</th>
     <th colspan="2" id="sort-icons-row"></th>
   </tr>
-  <% if (tasks && tasks.length) { tasks.forEach((task) => { %>
-  <tr class="task-row" data-category="<%= task.category %>">
-    <td><%= task.category %></td>
-    <td><%= task.taskName %></td>
-    <td><%= task.status %></td>
+  <% if (events && events.length) { events.forEach((event) => { %>
+  <tr class="event-row" data-event="<%= event.event %>">
+    <td><%= event.eventName %></td>
+    <td><%= event.status %></td>
     <td>
-      <%= task.createdAt.toLocaleDateString('en-US', { year: 'numeric', month:
+      <%= event.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
       'short', day: 'numeric', }) %>
     </td>
+    <td><%= event.description %></td>
     <td>
-      <%= task.updatedAt.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
-    </td>
-    <td>
-      <%= task.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
-    </td>
-    <td><%= task.notes %></td>
-    <td>
-      <a href="/tasks/edit/<%= task.id %>">
+      <a href="/events/edit/<%= event.id %>">
         <button type="button">Edit</button>
       </a>
     </td>
     <td>
       <form
         method="POST"
-        action="/tasks/delete/<%= task.id %>"
+        action="/events/delete/<%= event.id %>"
         style="display: inline"
       >
         <button>Delete</button>
@@ -65,16 +52,12 @@
   <% }) } %>
 </table>
 
-<a href="/tasks/new">
-  <button type="button">Add New Task</button>
-</a>
-
 <script>
-  function filterTasks(category) {
-    const rows = document.querySelectorAll(".task-row");
+  function filterEvents(event) {
+    const rows = document.querySelectorAll(".event-row");
     rows.forEach((row) => {
-      const rowCategory = row.getAttribute("data-category");
-      if (category === "all" || rowCategory === category) {
+      const rowCategory = row.getAttribute("data-event");
+      if (event === "all" || rowCategory === event) {
         row.style.display = "";
       } else {
         row.style.display = "none";
@@ -82,14 +65,10 @@
     });
   }
 
-  let sortDirection = {
-    createdAt: "asc",
-    updatedAt: "asc",
-    dueDate: "asc",
-  };
+  let sortDirection = { dueDate: "asc" };
 
   function sortDate(column, button) {
-    const rows = Array.from(document.querySelectorAll(".task-row"));
+    const rows = Array.from(document.querySelectorAll(".event-row"));
 
     // Toggle sort direction
     sortDirection[column] = sortDirection[column] === "asc" ? "desc" : "asc";
@@ -123,28 +102,28 @@
       }
     });
 
-    const tasksTable = document.getElementById("tasks-table");
+    const eventsTable = document.getElementById("events-table");
 
     // Create a document fragment to hold sorted rows
     const fragment = document.createDocumentFragment();
 
     // Append the header row to the fragment
-    fragment.appendChild(tasksTable.querySelector("#tasks-table-header"));
+    fragment.appendChild(eventsTable.querySelector("#events-table-header"));
 
     // Append sorted rows to the fragment
     rows.forEach((row) => fragment.appendChild(row));
 
     // Clear existing rows only if sorting is successful
     if (fragment.childNodes.length === rows.length + 1) {
-      tasksTable.innerHTML = "";
+      eventsTable.innerHTML = "";
 
-      // Append sorted rows, including the header, to the tasksTable
-      tasksTable.appendChild(fragment);
+      // Append sorted rows, including the header, to the eventsTable
+      eventsTable.appendChild(fragment);
     }
   }
 
   function clearSortIcons(currentColumn) {
-    const columnHeaders = document.querySelectorAll("#tasks-table-header th");
+    const columnHeaders = document.querySelectorAll("#events-table-header th");
     columnHeaders.forEach((header) => {
       const column = header.getAttribute("data-column");
 
@@ -181,8 +160,6 @@
       .textContent.trim();
 
     if (
-      column === "createdAt" ||
-      column === "updatedAt" ||
       column === "dueDate"
     ) {
       // If the column is a date, convert it to a Date object
@@ -200,18 +177,14 @@
     // Replace with the correct column indices for your table
     // Adjust the indices based on the actual structure of your table
     switch (column) {
-      case "category":
+      case "eventName":
         return 1;
-      case "taskName":
-        return 2;
       case "status":
-        return 3;
-      case "createdAt":
-        return 4;
-      case "updatedAt":
-        return 5;
+        return 2;
       case "dueDate":
-        return 6;
+        return 3;
+      case "description":
+        return 4;
       default:
         return 1;
     }
