@@ -9,5 +9,6 @@ router.get("/new", eventsController.showNewForm); //Put up the form to create a 
 router.get("/edit/:id", eventsController.showEditForm); //(Get a particular entry and show it in the edit box
 router.post("/update/:id", eventsController.updateEvent); //Update a particular entry
 router.post("/delete/:id", eventsController.deleteEvent); //Delete an entry
+// router.post("/addToTasks", eventsController.addEventtoTask); //Add a new task based on the event
 
 module.exports = router;

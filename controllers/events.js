@@ -12,6 +12,9 @@ const getEveryoneEvents = async (req, res) => {
 
 const getAllEvents = async (req, res) => {
   const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
+  // const events = await Event.find({ createdBy: req.user._id }).sort(
+  //   "eventName"
+  // );
 
   res.render("events", { events });
 };
@@ -38,9 +41,9 @@ const showEditForm = async (req, res) => {
 
 const createEvent = async (req, res) => {
   req.body.createdBy = req.user._id.toString();
-  const { eventName, status,  dueDate } = req.body;
+  const { eventName, status, dueDate } = req.body;
 
-  if (eventName === "" || status === "" || dueDate ==="") {
+  if (eventName === "" || status === "" || dueDate === "") {
     req.flash("error", "All equired fields cannot be empty.");
     res.redirect("/events/new");
   }
@@ -68,12 +71,36 @@ const deleteEvent = async (req, res) => {
   res.redirect("/events");
 };
 
+// const addEventtoTask = async (req, res) => {
+//   res.render("task", { task: null });
+// }
+
+// const addEventtoTask = async (req, res) => {
+
+//   const userId = req.user._id.toString();
+//   const eventId = req.params.id;
+
+//   // Retrieve the event by its ID
+//   const event = await Event.findById(eventId);
+//   if (!event) {
+//     return res.status(404).json({ message: "Event not found" });
+//   }
+
+//   // Create a new task using the event name as the task name
+//   const newTask = await Task.create({
+//     taskName: event.eventName, // Set task name as event name
+//     createdBy: userId, //  Assign it to the current logged in user
+//   });
+
+//   res.render("task", { task });
+// };
+
 const updateEvent = async (req, res) => {
   const { eventName, status, dueDate } = req.body;
   const userId = req.user._id.toString();
   const eventId = req.params.id;
 
-  if (eventName === "" || status=== "" || dueDate === "") {
+  if (eventName === "" || status === "" || dueDate === "") {
     req.flash("error", `All field should be filled in`);
     res.redirect("/events");
   }
@@ -100,5 +127,5 @@ module.exports = {
   createEvent,
   updateEvent,
   deleteEvent,
-
+  // addEventtoTask,
 };
