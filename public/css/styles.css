@@ -1,0 +1,20 @@
+body, head, header {
+  background-color: #25a645;
+  margin: 0; 
+  padding: 0;
+  color: #120898;
+  text-align: center;
+}
+h1, title {
+  font-size: min(3vw, 7em);
+  line-height: 1.2;
+  color: #e30f5d;
+  border: #37277d;
+}
+
+table {
+  width: 600px; 
+  margin: 0 auto; 
+  color: #37277d;
+  border-collapse: collapse;
+}

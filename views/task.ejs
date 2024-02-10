@@ -42,6 +42,9 @@
     </div>
     <% } %>
   <button type="submit" id="adding-task"><%= task ? "Update Task" : "Add Task" %></button>
-  <input type="hidden" name="_csrf" value="<%= _csrf %>" /> 
+  <a href="/tasks">
+    <button type="button">Cancel</button>
+  </a>
+  <input type="hidden" name="_csrf" value="<%= _csrf %>">
 </form>
 <%- include("partials/footer.ejs") %>
