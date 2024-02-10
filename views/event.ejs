@@ -26,6 +26,9 @@
   </div>
   
   <button type="submit" id="adding-event"><%= event ? "Update Event" : "Add Event" %></button>
-  <input type="hidden" name="_csrf" value="<%= _csrf %>" /> 
+  <a href="/events">
+    <button type="button">Cancel</button>
+  </a>
+  <input type="hidden" name="_csrf" value="<%= _csrf %>">
 </form>
 <%- include("partials/footer.ejs") %>

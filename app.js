@@ -5,7 +5,6 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
-const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
 const cookieParser = require("cookie-parser");
 const tasks = require("./routes/tasks");
@@ -41,6 +40,7 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sessionParms));
+app.use(express.static('public')); //styles
 
 // after cookie_parser and any body parsers but before any of the routes.
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -76,14 +76,11 @@ app.use(
   })
 );
 
-// secret word handling
-
 // routes
 app.get("/", (req, res) => {
   res.render("index");
 });
 app.use("/sessions", require("./routes/sessionRoutes"));
-app.use("/secretWord", auth, secretWordRouter);
 app.use("/tasks", auth, tasks);
 app.use("/events", auth, events);
 

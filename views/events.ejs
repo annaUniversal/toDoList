@@ -29,8 +29,9 @@
     <td><%= event.eventName %></td>
     <td><%= event.status %></td>
     <td>
-      <%= event.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
+      <%= event.dueDate.toISOString().substr(5, 2) + '/' +
+      event.dueDate.toISOString().substr(8, 2) + '/' +
+      event.dueDate.toISOString().substr(0, 4) %>
     </td>
     <td><%= event.description %></td>
     <td>

@@ -34,16 +34,19 @@
     <td><%= task.taskName %></td>
     <td><%= task.status %></td>
     <td>
-      <%= task.createdAt.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
+      <%= task.createdAt.toISOString().substr(5, 2) + '/' +
+      task.createdAt.toISOString().substr(8, 2) + '/' +
+      task.createdAt.toISOString().substr(0, 4) %>
     </td>
     <td>
-      <%= task.updatedAt.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
+      <%= task.updatedAt.toISOString().substr(5, 2) + '/' +
+      task.updatedAt.toISOString().substr(8, 2) + '/' +
+      task.updatedAt.toISOString().substr(0, 4) %>
     </td>
     <td>
-      <%= task.dueDate.toLocaleDateString('en-US', { year: 'numeric', month:
-      'short', day: 'numeric', }) %>
+      <%= task.dueDate.toISOString().substr(5, 2) + '/' +
+      task.dueDate.toISOString().substr(8, 2) + '/' +
+      task.dueDate.toISOString().substr(0, 4) %>
     </td>
     <td><%= task.notes %></td>
     <td>
