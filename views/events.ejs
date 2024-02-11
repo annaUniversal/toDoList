@@ -24,10 +24,13 @@
     <th>Event description</th>
     <th colspan="2" id="sort-icons-row"></th>
   </tr>
-  <% if (events && events.length) { const startIndex = (currentPage - 1) *
-  eventsPerPage; const endIndex = Math.min(startIndex + eventsPerPage,
-  events.length); const paginatedEvents = events.slice(startIndex, endIndex);
-  paginatedEvents.forEach((event) => { %>
+  <% if (events && events.length) { 
+    const startIndex = (currentPage - 1) * eventsPerPage; 
+    const endIndex = Math.min(startIndex + eventsPerPage, events.length); 
+    const paginatedEvents = events.slice(startIndex, endIndex); 
+    paginatedEvents.forEach((event) => { 
+  %>
+
   <tr class="event-row" data-event="<%= event.event %>">
     <td><%= event.eventName %></td>
     <td><%= event.status %></td>
@@ -71,13 +74,13 @@
 
 <script>
   // Pagination Variables
-  const totalEvents = <%= events.length %>; // Total number of events
+  const totalEvents = events.length; // Total number of events
   const eventsPerPage = 5; // Events to display per page
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
-  console.log('1  ' + currentPage);
-  let currentPage = <%= currentPage %>;
-  console.log('2  ' + currentPage);
-  
+  console.log("1  " + currentPage);
+  let currentPage = currentPage;
+  console.log("2  " + currentPage);
+
   function filterEvents(event) {
     const rows = document.querySelectorAll(".event-row");
     rows.forEach((row) => {
@@ -184,9 +187,7 @@
       .querySelector(`td:nth-child(${getColumnIndex(column)})`)
       .textContent.trim();
 
-    if (
-      column === "dueDate"
-    ) {
+    if (column === "dueDate") {
       // If the column is a date, convert it to a Date object
       return new Date(cellValue);
     } else if (!isNaN(parseFloat(cellValue))) {

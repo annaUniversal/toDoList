@@ -10,14 +10,14 @@ const getEveryoneEvents = async (req, res) => {
   res.render("events", { events });
 };
 
-const getAllEvents = async (req, res) => {
-  const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
-  // const events = await Event.find({ createdBy: req.user._id }).sort(
-  //   "eventName"
-  // );
+// const getAllEvents = async (req, res) => {
+//   const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
+//   // const events = await Event.find({ createdBy: req.user._id }).sort(
+//   //   "eventName"
+//   // );
 
-  res.render("events", { events });
-};
+//   res.render("events", { events });
+// };
 
 const showNewForm = async (req, res) => {
   res.render("event", { event: null });
@@ -74,7 +74,7 @@ const deleteEvent = async (req, res) => {
 const pagination = async (req, res) => {
   try {
     // Fetch events data from your data source
-    const events = await Event.find();
+    const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
 
     // Define events per page
     const eventsPerPage = 5;
@@ -90,7 +90,7 @@ const pagination = async (req, res) => {
     const paginatedEvents = events.slice(startIndex, endIndex);
 
     // Pass paginatedEvents, totalPages, and currentPage to the EJS template when rendering
-    res.render('events', { events: paginatedEvents, totalPages: Math.ceil(events.length / eventsPerPage), currentPage:0 });
+    res.render('events', { events: paginatedEvents, totalPages: Math.ceil(events.length / eventsPerPage), currentPage, eventsPerPage });
   } catch (err) {
     console.error('Error fetching events:', err);
     res.status(500).send('Internal Server Error');
@@ -149,7 +149,7 @@ const updateEvent = async (req, res) => {
 
 module.exports = {
   getEveryoneEvents,
-  getAllEvents,
+  //getAllEvents,
   showNewForm,
   showEditForm,
   createEvent,

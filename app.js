@@ -14,6 +14,7 @@ const csrf = require("host-csrf");
 const app = express();
 
 app.set("view engine", "ejs");
+app.use(express.static('public'));
 app.use(require("body-parser").urlencoded({ extended: true }));
 
 
