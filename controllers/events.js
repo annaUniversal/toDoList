@@ -10,14 +10,14 @@ const getEveryoneEvents = async (req, res) => {
   res.render("events", { events });
 };
 
-const getAllEvents = async (req, res) => {
-  const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
-  // const events = await Event.find({ createdBy: req.user._id }).sort(
-  //   "eventName"
-  // );
+// const getAllEvents = async (req, res) => {
+//   const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
+//   // const events = await Event.find({ createdBy: req.user._id }).sort(
+//   //   "eventName"
+//   // );
 
-  res.render("events", { events });
-};
+//   res.render("events", { events });
+// };
 
 const showNewForm = async (req, res) => {
   res.render("event", { event: null });
@@ -71,6 +71,34 @@ const deleteEvent = async (req, res) => {
   res.redirect("/events");
 };
 
+const pagination = async (req, res) => {
+  try {
+    // Fetch events data from your data source
+    const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
+
+    // Define events per page
+    const eventsPerPage = 5;
+
+    // Determine current page (e.g., from query parameter)
+    const currentPage = parseInt(req.query.page) || 1;
+
+    // Calculate pagination indices
+    const startIndex = (currentPage - 1) * eventsPerPage;
+    const endIndex = startIndex + eventsPerPage;
+
+    // Slice the events array to get events for the current page
+    const paginatedEvents = events.slice(startIndex, endIndex);
+
+    // Pass paginatedEvents, totalPages, and currentPage to the EJS template when rendering
+    res.render('events', { events: paginatedEvents, totalPages: Math.ceil(events.length / eventsPerPage), currentPage, eventsPerPage });
+  } catch (err) {
+    console.error('Error fetching events:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+
 // const addEventtoTask = async (req, res) => {
 //   res.render("task", { task: null });
 // }
@@ -121,11 +149,12 @@ const updateEvent = async (req, res) => {
 
 module.exports = {
   getEveryoneEvents,
-  getAllEvents,
+  //getAllEvents,
   showNewForm,
   showEditForm,
   createEvent,
   updateEvent,
   deleteEvent,
+  pagination,
   // addEventtoTask,
 };
