@@ -4,11 +4,11 @@ const { BadRequestError } = require("../errors/bad-request");
 const User = require("../models/User");
 const { request } = require("express");
 
-const getEveryoneEvents = async (req, res) => {
-  const events = await Event.sort("dueDate");
+// const getEveryoneEvents = async (req, res) => {
+//   const events = await Event.sort("dueDate");
 
-  res.render("events", { events });
-};
+//   res.render("events", { events });
+// };
 
 // const getAllEvents = async (req, res) => {
 //   const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
@@ -148,7 +148,7 @@ const updateEvent = async (req, res) => {
 };
 
 module.exports = {
-  getEveryoneEvents,
+  // getEveryoneEvents,
   //getAllEvents,
   showNewForm,
   showEditForm,

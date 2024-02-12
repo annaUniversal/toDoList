@@ -2,7 +2,7 @@
 <%- include("partials/header.ejs") %>
 
 <h2><%= task ? "Edit" : "Add New" %> Task</h2>
-<form method="POST" action="<%= task ? '/tasks/update/' + task._id : '/tasks' %>">
+<form method="POST" action="<%= task ? '/tasks/update/' + task._id : '/tasks' %>" id="addItem">
   <div>
     <label for="category">category:</label>
     <select id="category" name="category">
