@@ -2,10 +2,11 @@
 <%- include("partials/header.ejs") %>
 
 <h2><%= event ? "Edit" : "Add New" %> Event</h2>
-<form method="POST" action="<%= event ? '/events/update/' + event._id : '/events' %>">
+<form method="POST" action="<%= event ? '/events/update/' + event._id : '/events' %>" id = "addItem">
   <div>
     <label for="eventName">eventName:</label>
     <input type="text" id="eventName" name="eventName" value="<%= event ? event.eventName : '' %>" required />
+    <!-- <input type="hidden" name="_csrf" value="<%= _csrf %>"> -->
   </div>
   <div>
     <label for="status">Status</label>
@@ -13,16 +14,19 @@
       <option value="pending" <%= (event && event.status === 'pending' ? 'selected' : '') %> >Pending</option>
       <option value="going" <%= event && event.status === 'going' ? 'selected' : '' %> >Going</option>
       <option value="maybe" <%= event && event.status === 'maybe' ? 'selected' : '' %> >Maybe</option>
-      <option value="declined" <%= event && event.status === 'declined' ? 'selected' : '' %> >Declined</option>       
+      <option value="declined" <%= event && event.status === 'declined' ? 'selected' : '' %> >Declined</option>   
+      <!-- <input type="hidden" name="_csrf" value="<%= _csrf %>">     -->
     </select>
   </div>
   <div>
     <label for="description">description:</label>
     <input type="text" id="description" name="description" value= "<%=  event ? event.description : '' %>" >
+    <!-- <input type="hidden" name="_csrf" value="<%= _csrf %>"> -->
   </div>
   <div> 
     <label for="dueDate">Date of the event:</label>
     <input type="date" id="dueDate" name="dueDate" value="<%= event ? event.dueDate.toISOString().substr(0, 10) : '' %>" required>
+    <!-- <input type="hidden" name="_csrf" value="<%= _csrf %>"> -->
   </div>
   
   <button type="submit" id="adding-event"><%= event ? "Update Event" : "Add Event" %></button>

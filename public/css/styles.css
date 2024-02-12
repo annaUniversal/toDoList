@@ -1,20 +1,76 @@
 body, head, header {
-  background-color: #25a645;
+  /* background-color: #c1f0cd; */
   margin: 0; 
   padding: 0;
   color: #120898;
   text-align: center;
 }
-h1, title {
+
+body {
+  background-image: url('../img/beach.jpg'); 
+  background-position: center; 
+  padding: 20px; 
+}
+
+h1 {
   font-size: min(3vw, 7em);
   line-height: 1.2;
   color: #e30f5d;
   border: #37277d;
 }
 
+p {
+  color: #e30f5d;
+  font-weight: bold; 
+  font-size: 24px;
+}
+
 table {
-  width: 600px; 
-  margin: 0 auto; 
+  width: 1000px;
+  margin: 0 auto;
+  /* color: #37277d;
+  border-collapse: collapse; */
+} 
+
+button {
+  padding: 10px 20px;
+  background-color: #519aee; /* Using the color you previously mentioned */
+  color: #fff; /* White text color */
+  border: none;
+  border-radius: 15px;
+  cursor: pointer; /* Hand cursor on hover for better UX */
+  transition: background-color 0.3s; /* Smooth transition on hover */
+  margin: 5px;
+}
+
+#events-table, #tasks-table, #addItem {
+  background-color: #bfdafa;
+  border-radius: 15px; /* Round edges */
+  padding: 10px; /* Add some padding for better appearance */
+  width: 1000px;
+  margin: 0 auto !important; /* Center horizontally with important */
   color: #37277d;
-  border-collapse: collapse;
+  border-collapse: separate; /* Use separate border model */
+}
+
+#events-table tr, #tasks-table tr {
+  border-radius: 15px; /* Round edges for table rows */
+}
+
+#events-table tr td, #tasks-table tr td {
+  border-bottom: 1px solid #120898; /* Add bottom border to table cells */
+  padding: 8px; /* Add padding for better appearance */
+}
+
+
+
+
+form input,
+form select {
+  background-color: #bfdafa;
+  color: #120898; 
+  /* border: none; Remove default borders */
+  border-radius: 5px; /* Add some border-radius for better appearance */
+  padding: 8px; /* Add some padding for better appearance */
+  margin-bottom: 10px; /* Add some margin to separate form elements */
 }

@@ -77,10 +77,8 @@
   const totalEvents = events.length; // Total number of events
   const eventsPerPage = 5; // Events to display per page
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
-  console.log("1  " + currentPage);
   let currentPage = currentPage;
-  console.log("2  " + currentPage);
-
+  
   function filterEvents(event) {
     const rows = document.querySelectorAll(".event-row");
     rows.forEach((row) => {
