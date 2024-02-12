@@ -74,7 +74,9 @@ const deleteEvent = async (req, res) => {
 const pagination = async (req, res) => {
   try {
     // Fetch events data from your data source
-    const events = await Event.find({ createdBy: req.user._id }).sort("eventName");
+    const events = await Event.find({ createdBy: req.user._id }).sort(
+      "eventName"
+    );
 
     // Define events per page
     const eventsPerPage = 5;
@@ -85,19 +87,23 @@ const pagination = async (req, res) => {
     // Calculate pagination indices
     const startIndex = (currentPage - 1) * eventsPerPage;
     const endIndex = startIndex + eventsPerPage;
-
+  
     // Slice the events array to get events for the current page
     const paginatedEvents = events.slice(startIndex, endIndex);
 
     // Pass paginatedEvents, totalPages, and currentPage to the EJS template when rendering
-    res.render('events', { events: paginatedEvents, totalPages: Math.ceil(events.length / eventsPerPage), currentPage, eventsPerPage });
+    // res.render('events', { events: paginatedEvents, totalPages: Math.ceil(events.length / eventsPerPage), currentPage, eventsPerPage });
+    res.render("events", {
+      paginatedEvents: paginatedEvents,
+      totalPages: Math.ceil(events.length / eventsPerPage),
+      currentPage: currentPage,
+      eventsPerPage: eventsPerPage,
+    });
   } catch (err) {
-    console.error('Error fetching events:', err);
-    res.status(500).send('Internal Server Error');
+    console.error("Error fetching events:", err);
+    res.status(500).send("Internal Server Error");
   }
 };
-
-
 
 // const addEventtoTask = async (req, res) => {
 //   res.render("task", { task: null });

@@ -24,12 +24,7 @@
     <th>Event description</th>
     <th colspan="2" id="sort-icons-row"></th>
   </tr>
-  <% if (events && events.length) { 
-    const startIndex = (currentPage - 1) * eventsPerPage; 
-    const endIndex = Math.min(startIndex + eventsPerPage, events.length); 
-    const paginatedEvents = events.slice(startIndex, endIndex); 
-    paginatedEvents.forEach((event) => { 
-  %>
+  <% paginatedEvents.forEach((event) => { %>
 
   <tr class="event-row" data-event="<%= event.event %>">
     <td><%= event.eventName %></td>
@@ -56,7 +51,8 @@
       </form>
     </td>
   </tr>
-  <% }) } %>
+
+  <% }) %>
 </table>
 
 <!-- Pagination Controls -->
@@ -74,11 +70,12 @@
 
 <script>
   // Pagination Variables
+  console.log("length ", events.length);
   const totalEvents = events.length; // Total number of events
-  const eventsPerPage = 5; // Events to display per page
+  const eventsPerPage = eventsPerPage; // Events to display per page
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
   let currentPage = currentPage;
-  
+
   function filterEvents(event) {
     const rows = document.querySelectorAll(".event-row");
     rows.forEach((row) => {
