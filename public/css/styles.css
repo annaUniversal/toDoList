@@ -1,28 +1,45 @@
-body, head, header {
-  /* background-color: #c1f0cd; */
-  margin: 0; 
+body,
+head,
+header {
+  /* height: 100%; */
+  margin: 0;
   padding: 0;
   color: #120898;
   text-align: center;
 }
 
-body {
-  background-image: url('../img/beach.jpg'); 
-  background-position: center; 
-  padding: 20px; 
+html {
+  background-image: url("../img/beach.jpg");
+  background-position: center;
+  padding: 20px;
 }
 
-h1 {
-  font-size: min(3vw, 7em);
+h1, p {
+  font-size: min(3vw, 6em);
   line-height: 1.2;
-  color: #e30f5d;
-  border: #37277d;
+  color: red;
+  
+  /* border: #37277d; */
 }
 
-p {
-  color: #e30f5d;
-  font-weight: bold; 
+a {
+  color: red;
+  font-weight: bold;
   font-size: 24px;
+}
+
+a:link {
+  color: blue; 
+}
+
+a:visited {
+  color: rgb(6, 0, 128);
+}
+a:hover {
+  color: red;
+}
+a:active {
+  color: green;
 }
 
 table {
@@ -30,7 +47,7 @@ table {
   margin: 0 auto;
   /* color: #37277d;
   border-collapse: collapse; */
-} 
+}
 
 button {
   padding: 10px 20px;
@@ -43,7 +60,36 @@ button {
   margin: 5px;
 }
 
-#events-table, #tasks-table, #addItem {
+form input,
+form select {
+  background-color: #bfdafa;
+  color: #120898;
+  /* border: none; Remove default borders */
+  border-radius: 5px; /* Add some border-radius for better appearance */
+  padding: 8px; /* Add some padding for better appearance */
+  margin-bottom: 10px; /* Add some margin to separate form elements */
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  background-color: #37277d; /* Add a background color for better visibility */
+  padding: 20px;
+  z-index: 1000; /* Adjust z-index to ensure it's above other elements */
+}
+
+#page-content {
+  min-height: 80%;
+  /* min-height: calc(100% - 50px);  */
+  padding-bottom: 50px;
+}
+
+#events-table,
+#tasks-table,
+#addItem {
   background-color: #bfdafa;
   border-radius: 15px; /* Round edges */
   padding: 10px; /* Add some padding for better appearance */
@@ -53,24 +99,13 @@ button {
   border-collapse: separate; /* Use separate border model */
 }
 
-#events-table tr, #tasks-table tr {
+#events-table tr,
+#tasks-table tr {
   border-radius: 15px; /* Round edges for table rows */
 }
 
-#events-table tr td, #tasks-table tr td {
+#events-table tr td,
+#tasks-table tr td {
   border-bottom: 1px solid #120898; /* Add bottom border to table cells */
   padding: 8px; /* Add padding for better appearance */
-}
-
-
-
-
-form input,
-form select {
-  background-color: #bfdafa;
-  color: #120898; 
-  /* border: none; Remove default borders */
-  border-radius: 5px; /* Add some border-radius for better appearance */
-  padding: 8px; /* Add some padding for better appearance */
-  margin-bottom: 10px; /* Add some margin to separate form elements */
 }

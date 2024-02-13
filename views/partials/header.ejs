@@ -1,6 +1,6 @@
-<h1>Tasks and Events</h1>
 <% if (user) { %>
-<p>User <%= user.name %> is logged on.</p>
+  <h1><%= user.name %> Your Tasks and Events</h1>
+<!-- <p>User  is logged on.</p> -->
 
 <form method="POST" action="/sessions/logoff">
   <input type="hidden" name="_csrf" value="<%= _csrf %>">
