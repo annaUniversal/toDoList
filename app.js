@@ -2,6 +2,7 @@ const express = require("express");
 require("express-async-errors");
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 //extra security packages
 const helmet = require("helmet");
@@ -13,6 +14,7 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 const auth = require("./middleware/auth");
+const { UnauthenticatedError } = require("./errors");
 const cookieParser = require("cookie-parser");
 
 // error handler
@@ -69,11 +71,11 @@ if (app.get("env") === "production") {
       max: 100, // limit each IP to 100 requests per windowMs
     })
   );
-  app.use(express.json());
-  app.use(helmet());
-  app.use(cors());
-  app.use(xss());
 }
+app.use(express.json());
+app.use(helmet());
+app.use(cors());
+app.use(xss());
 
 const csrf_options = {
   protected_operations: ["PATCH", "PUT", "POST"],

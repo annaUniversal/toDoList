@@ -1,29 +1,38 @@
-const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { UnauthenticatedError } = require("../errors");
 
 const auth = async (req, res, next) => {
-  // check header
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new UnauthenticatedError("Authorization invalid");
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
-    const payload = jwt.verify(token, process.env.JWY_SECRET);
-    // attach user to the job rout
+    // check header
+    console.log('request ==>', req.headers.authorization);
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new UnauthenticatedError(
+        "Authorization header missing or malformed"
+      );
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    // attach user to the request object
     req.user = { userId: payload.userId, name: payload.name };
 
-    // can be used the following
-    // const user = User.findById(payload.id).select('-password')
-    // req.user = user
-
-    next()
+    next();
   } catch (error) {
-    throw new UnauthenticatedError("Authorization invalid");
+    if (error instanceof jwt.JsonWebTokenError) {
+      // Token is invalid
+      throw new UnauthenticatedError("Invalid token");
+    } else if (error instanceof jwt.TokenExpiredError) {
+      // Token has expired
+      throw new UnauthenticatedError("Token expired");
+    } else {
+      // Other errors
+      console.error(error);
+      throw new UnauthenticatedError("Authorization error");
+    }
   }
 };
 
-module.exports = auth
+module.exports = auth;

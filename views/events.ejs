@@ -6,8 +6,8 @@
   <table>
     <tr>
       <td>
-        <a href="/tasks">
-          <button type="button">Show my Tasks</button>
+        <a href="/events">
+          <button type="button">Show my Events</button>
         </a>
         <!-- <button type="button" onclick="filterEvents('all')">Show All</button> -->
         <a href="/events/new">
@@ -69,151 +69,167 @@
     <a href="/events?page=<%= totalPages %>">Last</a>
   </div>
 </div>
-  <script>
-    let sortDirection = { dueDate: "asc" };
+<script>
+  // Perform Axios request to fetch events
+  const axios = require("axios");
+axios
+  .get("/events", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer <%= token %>`,
+    },
+  })
+  .then((response) => {
+    // Handle response data and display events accordingly
+  })
+  .catch((error) => {
+    // Handle error if Axios request fails
+    console.error("Error fetching events:", error);
+  });
 
-    // Pagination Variables
-    console.log("length ", events.length);
-    const totalEvents = events.length; // Total number of events
-    const eventsPerPage = eventsPerPage; // Events to display per page
-    const totalPages = Math.ceil(totalEvents / eventsPerPage);
-    let currentPage = currentPage;
+    
 
-    function filterEvents(event) {
-      const rows = document.querySelectorAll(".event-row");
-      rows.forEach((row) => {
-        const rowCategory = row.getAttribute("data-event");
-        if (event === "all" || rowCategory === event) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
+  let sortDirection = { dueDate: "asc" };
 
-    function sortDate(column, button) {
-      const rows = Array.from(document.querySelectorAll(".event-row"));
+  // Pagination Variables
+  console.log("length ", events.length);
+  const totalEvents = events.length; // Total number of events
+  const eventsPerPage = eventsPerPage; // Events to display per page
+  const totalPages = Math.ceil(totalEvents / eventsPerPage);
+  let currentPage = currentPage;
 
-      // Toggle sort direction
-      sortDirection[column] = sortDirection[column] === "asc" ? "desc" : "asc";
-
-      // Clear existing icons from other column headers
-      clearSortIcons(column);
-
-      // Update sorting icon for the clicked button
-      updateSortIcon(button, sortDirection[column]);
-
-      // Update sorting icon for the corresponding date column header
-      const dateColumnHeader = document.querySelector(
-        `th[data-column="${column}"]`
-      );
-      updateSortIcon(dateColumnHeader, sortDirection[column]);
-
-      rows.sort((a, b) => {
-        const valueA = getValue(a, column);
-        const valueB = getValue(b, column);
-
-        if (typeof valueA === "string" && typeof valueB === "string") {
-          // Use localeCompare for string comparison
-          return sortDirection[column] === "asc"
-            ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
-        } else {
-          // For non-string columns (e.g., dates), use numeric comparison
-          return sortDirection[column] === "asc"
-            ? valueA - valueB
-            : valueB - valueA;
-        }
-      });
-
-      const eventsTable = document.getElementById("events-table");
-
-      // Create a document fragment to hold sorted rows
-      const fragment = document.createDocumentFragment();
-
-      // Append the header row to the fragment
-      fragment.appendChild(eventsTable.querySelector("#events-table-header"));
-
-      // Append sorted rows to the fragment
-      rows.forEach((row) => fragment.appendChild(row));
-
-      // Clear existing rows only if sorting is successful
-      if (fragment.childNodes.length === rows.length + 1) {
-        eventsTable.innerHTML = "";
-
-        // Append sorted rows, including the header, to the eventsTable
-        eventsTable.appendChild(fragment);
-      }
-    }
-
-    function clearSortIcons(currentColumn) {
-      const columnHeaders = document.querySelectorAll(
-        "#events-table-header th"
-      );
-      columnHeaders.forEach((header) => {
-        const column = header.getAttribute("data-column");
-
-        if (column !== currentColumn) {
-          // Clear icons from other column headers
-          const existingIcons = header.querySelectorAll("span");
-          existingIcons.forEach((icon) => icon.remove());
-        }
-      });
-    }
-
-    function updateSortIcon(element, direction) {
-      const icons = {
-        asc: "&#9650;",
-        desc: "&#9660;",
-      };
-
-      // Check if the element exists
-      if (element) {
-        // Remove existing icons
-        const existingIcons = element.querySelectorAll("span");
-        existingIcons.forEach((icon) => icon.remove());
-
-        // Update the icon for the clicked element
-        const iconElement = document.createElement("span");
-        iconElement.innerHTML = `${icons[direction]}`;
-        element.appendChild(iconElement);
-      }
-    }
-
-    function getValue(row, column) {
-      const cellValue = row
-        .querySelector(`td:nth-child(${getColumnIndex(column)})`)
-        .textContent.trim();
-
-      if (column === "dueDate") {
-        // If the column is a date, convert it to a Date object
-        return new Date(cellValue);
-      } else if (!isNaN(parseFloat(cellValue))) {
-        // For numeric values, convert to a number
-        return parseFloat(cellValue);
+  function filterEvents(event) {
+    const rows = document.querySelectorAll(".event-row");
+    rows.forEach((row) => {
+      const rowCategory = row.getAttribute("data-event");
+      if (event === "all" || rowCategory === event) {
+        row.style.display = "";
       } else {
-        // For other columns, treat as strings
-        return cellValue.toLowerCase(); // Use toLowerCase for case-insensitive sorting
+        row.style.display = "none";
       }
-    }
+    });
+  }
 
-    function getColumnIndex(column) {
-      // Replace with the correct column indices for your table
-      // Adjust the indices based on the actual structure of your table
-      switch (column) {
-        case "eventName":
-          return 1;
-        case "status":
-          return 2;
-        case "dueDate":
-          return 3;
-        case "description":
-          return 4;
-        default:
-          return 1;
+  function sortDate(column, button) {
+    const rows = Array.from(document.querySelectorAll(".event-row"));
+
+    // Toggle sort direction
+    sortDirection[column] = sortDirection[column] === "asc" ? "desc" : "asc";
+
+    // Clear existing icons from other column headers
+    clearSortIcons(column);
+
+    // Update sorting icon for the clicked button
+    updateSortIcon(button, sortDirection[column]);
+
+    // Update sorting icon for the corresponding date column header
+    const dateColumnHeader = document.querySelector(
+      `th[data-column="${column}"]`
+    );
+    updateSortIcon(dateColumnHeader, sortDirection[column]);
+
+    rows.sort((a, b) => {
+      const valueA = getValue(a, column);
+      const valueB = getValue(b, column);
+
+      if (typeof valueA === "string" && typeof valueB === "string") {
+        // Use localeCompare for string comparison
+        return sortDirection[column] === "asc"
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      } else {
+        // For non-string columns (e.g., dates), use numeric comparison
+        return sortDirection[column] === "asc"
+          ? valueA - valueB
+          : valueB - valueA;
       }
-    }
-  </script>
+    });
 
+    const eventsTable = document.getElementById("events-table");
+
+    // Create a document fragment to hold sorted rows
+    const fragment = document.createDocumentFragment();
+
+    // Append the header row to the fragment
+    fragment.appendChild(eventsTable.querySelector("#events-table-header"));
+
+    // Append sorted rows to the fragment
+    rows.forEach((row) => fragment.appendChild(row));
+
+    // Clear existing rows only if sorting is successful
+    if (fragment.childNodes.length === rows.length + 1) {
+      eventsTable.innerHTML = "";
+
+      // Append sorted rows, including the header, to the eventsTable
+      eventsTable.appendChild(fragment);
+    }
+  }
+
+  function clearSortIcons(currentColumn) {
+    const columnHeaders = document.querySelectorAll("#events-table-header th");
+    columnHeaders.forEach((header) => {
+      const column = header.getAttribute("data-column");
+
+      if (column !== currentColumn) {
+        // Clear icons from other column headers
+        const existingIcons = header.querySelectorAll("span");
+        existingIcons.forEach((icon) => icon.remove());
+      }
+    });
+  }
+
+  function updateSortIcon(element, direction) {
+    const icons = {
+      asc: "&#9650;",
+      desc: "&#9660;",
+    };
+
+    // Check if the element exists
+    if (element) {
+      // Remove existing icons
+      const existingIcons = element.querySelectorAll("span");
+      existingIcons.forEach((icon) => icon.remove());
+
+      // Update the icon for the clicked element
+      const iconElement = document.createElement("span");
+      iconElement.innerHTML = `${icons[direction]}`;
+      element.appendChild(iconElement);
+    }
+  }
+
+  function getValue(row, column) {
+    const cellValue = row
+      .querySelector(`td:nth-child(${getColumnIndex(column)})`)
+      .textContent.trim();
+
+    if (column === "dueDate") {
+      // If the column is a date, convert it to a Date object
+      return new Date(cellValue);
+    } else if (!isNaN(parseFloat(cellValue))) {
+      // For numeric values, convert to a number
+      return parseFloat(cellValue);
+    } else {
+      // For other columns, treat as strings
+      return cellValue.toLowerCase(); // Use toLowerCase for case-insensitive sorting
+    }
+  }
+
+  function getColumnIndex(column) {
+    // Replace with the correct column indices for your table
+    // Adjust the indices based on the actual structure of your table
+    switch (column) {
+      case "eventName":
+        return 1;
+      case "status":
+        return 2;
+      case "dueDate":
+        return 3;
+      case "description":
+        return 4;
+      default:
+        return 1;
+    }
+  }
+</script>
 
 <%- include("partials/footer.ejs") %>
