@@ -1,3 +1,14 @@
+<% if (errors) { 
+    errors.forEach((err) => { %>
+      <div>Error: <%= err %></div>
+    <% }) 
+  } %>
+  
+  <% if (info) { 
+    info.forEach((msg) => { %>
+      <div>Info: <%= msg %></div>
+    <% }) 
+  } %>
 <p>&copy; Anna Gerhardt</p>
 </body>
 </html>
